@@ -1,0 +1,9 @@
+id,customer_id,category,amount
+1,1,book,12000
+2,1,food,8000
+3,2,book,15000
+4,2,toy,30000
+5,3,food,5500
+6,3,book,
+7,1,toy,22000
+8,4,food,9000

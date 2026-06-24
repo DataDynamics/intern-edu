@@ -1,0 +1,16 @@
+# 예제 — Postgres를 띄우는 최소 compose
+# 실행: docker compose up -d   /   접속: docker compose exec db psql -U postgres -d shop
+services:
+  db:
+    image: postgres:16
+    container_name: edu-pg-demo
+    environment:
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: shop
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

@@ -1,0 +1,15 @@
+# TODO: 아래 골격을 채워 Postgres를 띄우세요. (README의 요구사항 참고)
+services:
+  db:
+    image:           # TODO: postgres:16
+    container_name: edu-pg-exercise
+    environment:
+      # TODO: POSTGRES_PASSWORD, POSTGRES_DB 설정
+    ports:
+      # TODO: "호스트:컨테이너" 포트 매핑
+    volumes:
+      # TODO: pgdata 볼륨을 데이터 디렉토리에 연결
+      # TODO: ./init.sql 을 /docker-entrypoint-initdb.d/init.sql 에 마운트 (읽기전용 :ro)
+
+volumes:
+  # TODO: pgdata 볼륨 선언
