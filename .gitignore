@@ -23,3 +23,6 @@ venv/
 *.log
 !**/examples/data/*.log
 !**/exercises/**/data/*.log
+
+# 실습 중 생성되는 산출물 (정답 파일 아님)
+**/exercises/**/summary.json
