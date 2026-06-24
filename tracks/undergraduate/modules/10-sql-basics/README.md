@@ -29,6 +29,24 @@ customers(id, name, city)
 orders(id, customer_id, category, amount)   -- customer_id가 customers.id를 가리킨다
 ```
 
+이 관계를 그림으로 보면 한눈에 들어옵니다. 한 명의 고객(`customers`)이 여러 개의 주문(`orders`)을 가질 수 있고, 각 주문은 외래키로 자기 주인을 가리킵니다.
+
+```mermaid
+erDiagram
+    CUSTOMERS ||--o{ ORDERS : "주문한다"
+    CUSTOMERS {
+        int id PK
+        string name
+        string city
+    }
+    ORDERS {
+        int id PK
+        int customer_id FK
+        string category
+        int amount
+    }
+```
+
 ### SELECT — 데이터를 꺼내 오는 첫걸음
 
 모든 조회는 `SELECT`로 시작합니다. 어떤 열을 볼지 적고, `FROM` 뒤에 어느 테이블에서 가져올지 적습니다. 모든 열을 보려면 `*`를, 특정 열만 보려면 열 이름을 나열합니다. 중복을 걷어 내고 싶을 때는 `DISTINCT`를 붙입니다.

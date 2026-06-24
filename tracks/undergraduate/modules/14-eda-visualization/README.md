@@ -22,6 +22,16 @@
 
 데이터를 받으면 스스로 몇 가지를 물어봅니다. 행과 열은 몇 개인가(`df.shape`), 각 열의 타입과 빠진 값은 어떤가(`df.info()`, `df.isna().sum()`), 숫자 열의 분포는 어떤가(`df.describe()`), 범주형 열에는 어떤 값이 얼마나 자주 나오는가(`value_counts()`). 이 질문들에 답하다 보면 데이터의 윤곽이 잡힙니다.
 
+EDA는 대체로 다음과 같은 흐름으로 진행됩니다.
+
+```mermaid
+flowchart LR
+    A["데이터 받기"] --> B["살펴보기<br/>shape · describe · value_counts"]
+    B --> C["결측·이상치 점검"]
+    C --> D["차트로 시각화"]
+    D --> E["해석을 글로 정리"]
+```
+
 ```python
 import pandas as pd
 df = pd.read_csv("orders.csv")

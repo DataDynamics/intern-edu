@@ -24,14 +24,13 @@
 
 작업은 네 단계의 파이프라인으로 흐릅니다. 원본을 읽어 들이고(load), 결측·중복·형식을 정제하고 타입을 바꾸고(clean), `groupby`로 집계해 질문에 답하고(analyze), 그 결과를 그래프로 저장합니다(visualize). 이 흐름 자체가 데이터 엔지니어링의 핵심 골격입니다.
 
-```
-data/sales_raw.csv
-   │  (1) load      : CSV 읽기
-   │  (2) clean     : 결측/중복/형식 정제, 타입 변환
-   │  (3) analyze   : groupby 집계, 분석 질문에 답
-   │  (4) visualize : 막대/선 그래프 저장
-   ▼
-outputs/  (summary.json, *.png) + REPORT.md
+```mermaid
+flowchart TD
+    A["sales_raw.csv<br/>(더러운 원본)"] --> B["load<br/>CSV 읽기"]
+    B --> C["clean<br/>결측·중복·형식 정제"]
+    C --> D["analyze<br/>groupby 집계"]
+    D --> E["visualize<br/>막대·선 그래프 저장"]
+    E --> F["outputs/ + REPORT.md"]
 ```
 
 ---

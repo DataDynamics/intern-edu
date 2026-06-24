@@ -72,6 +72,23 @@ merged = orders.merge(customers, left_on="customer_id", right_on="id", how="inne
 
 여기까지 보면, SQL을 아는 사람에게 pandas가 한결 친숙하게 느껴질 것입니다. 같은 개념(필터·집계·조인)을 도구만 바꿔 표현하고 있을 뿐이니까요.
 
+```mermaid
+flowchart LR
+    subgraph SQL
+      A1["WHERE"]
+      A2["GROUP BY"]
+      A3["JOIN"]
+    end
+    subgraph pandas
+      B1["불리언 인덱싱"]
+      B2["groupby"]
+      B3["merge"]
+    end
+    A1 --> B1
+    A2 --> B2
+    A3 --> B3
+```
+
 ### 결측치 — 비어 있는 칸 다루기
 
 현실의 데이터에는 빈 칸이 흔하고, pandas는 이를 `NaN`(Not a Number)으로 표시합니다. 어디에 결측이 있는지 세어 보고, 상황에 맞게 채우거나(`fillna`) 버립니다(`dropna`). 특히 숫자여야 할 열에 글자가 섞여 있을 때 `pd.to_numeric(..., errors="coerce")`를 쓰면, 변환에 실패한 값을 NaN으로 바꿔 줍니다 — 이는 모듈 08에서 배운 `try/except`로 불량 데이터를 건너뛰던 것과 같은 정신입니다.
