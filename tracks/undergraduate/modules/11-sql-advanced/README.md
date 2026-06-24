@@ -1,74 +1,60 @@
 # 모듈 11 — SQL 활용
 
-> **포커스**: 집계 심화(GROUP BY/HAVING), 서브쿼리, CASE, 인덱스 개념
+> **포커스**: 집계 심화(GROUP BY/HAVING), 서브쿼리, CASE, NULL, 인덱스
 > **예상 기간**: 1주
 > **선행 모듈**: 10 SQL 기초
 
-기초 SELECT/JOIN을 넘어, 데이터에서 **의미 있는 답을 끌어내는** SQL을 배웁니다.
-"카테고리별 평균이 1만원 넘는 것만", "전체 평균보다 비싼 주문", "조건에 따라 라벨 붙이기"
-같은 분석형 쿼리가 데이터 엔지니어의 일상입니다. 마지막으로 **인덱스**로 쿼리가 왜
-빨라지는지도 감을 잡습니다.
-
-> 💡 09와 동일하게 SQLite로 실습합니다. 데이터는 조금 더 풍부해집니다.
+기초 모듈에서 데이터를 조회하고, 거르고, 잇고, 묶는 법을 배웠습니다. 이제 한 단계 올라가, 데이터에서 **의미 있는 답을 끌어내는** SQL을 다룹니다. "카테고리별 평균이 만 원을 넘는 것만", "전체 평균보다 비싼 주문", "금액에 따라 등급을 매겨서" — 이런 분석형 질문이 데이터 엔지니어와 분석가의 일상입니다. 같은 SQLite 환경에서, 조금 더 풍부해진 데이터를 가지고 연습합니다. 마지막에는 쿼리가 왜 어떤 때는 빠르고 어떤 때는 느린지를 가르는 **인덱스**의 개념까지 맛봅니다.
 
 ---
 
-## 🎯 학습 목표
-- 집계 함수와 `GROUP BY`/`HAVING`으로 그룹을 분석한다
-- 서브쿼리(쿼리 안의 쿼리)로 단계적 문제를 푼다
-- `CASE WHEN`으로 조건부 분류/라벨링을 한다
-- `NULL`을 올바르게 다룬다
-- 인덱스가 조회 성능에 주는 영향을 개념적으로 이해한다
+## 🎯 이 모듈을 마치면
+
+`GROUP BY`로 묶은 그룹을 `HAVING`으로 다시 걸러 내고, 쿼리 안에 쿼리를 넣는 서브쿼리로 단계적인 문제를 풀며, `CASE`로 조건에 따라 값을 분류하고, NULL을 올바르게 다루며, 인덱스가 조회 속도에 어떤 영향을 주는지 설명할 수 있게 됩니다.
 
 ---
 
-## 📚 핵심 주제
+## 📚 본문
 
-### 1. 집계 함수 복습 + 별칭
-```sql
-SELECT
-  COUNT(*)      AS cnt,
-  SUM(amount)   AS total,
-  AVG(amount)   AS avg_amount,
-  MIN(amount)   AS min_amount,
-  MAX(amount)   AS max_amount
-FROM orders;
-```
+### 집계를 다시 거르기 — WHERE와 HAVING
 
-### 2. GROUP BY + HAVING ⭐
-`WHERE`는 **행**을 거르고, `HAVING`은 **그룹**을 거릅니다.
+기초 모듈에서 `WHERE`로 행을 걸렀던 것을 기억하나요? 그런데 "카테고리별로 묶은 다음, 그 묶음의 평균이 만 원을 넘는 카테고리만 보고 싶다"면 어떻게 할까요? 여기서 거르려는 대상은 개별 행이 아니라 **묶인 그룹**입니다. 이럴 때 쓰는 것이 `HAVING`입니다.
+
 ```sql
--- 카테고리별 평균 주문액이 10000 이상인 카테고리만
 SELECT category, AVG(amount) AS avg_amount
 FROM orders
 GROUP BY category
 HAVING AVG(amount) >= 10000
 ORDER BY avg_amount DESC;
 ```
-순서: `WHERE`(행 필터) → `GROUP BY` → `HAVING`(그룹 필터).
 
-### 3. 서브쿼리 (Subquery)
-쿼리 결과를 다른 쿼리의 입력으로 씁니다.
+핵심은 둘의 역할 분담입니다. **`WHERE`는 묶기 전에 개별 행을 거르고, `HAVING`은 묶은 뒤에 그룹을 거릅니다.** 그래서 `WHERE amount > 1000`(행 조건)과 `HAVING SUM(amount) > 10000`(그룹 조건)은 한 쿼리에 함께 등장할 수 있고, 각자 다른 일을 합니다. 이 구분이 분석형 SQL의 첫 번째 관문입니다.
+
+### 서브쿼리 — 쿼리 속의 쿼리
+
+때로는 한 번의 조회로 답이 안 나오고, "먼저 이것을 계산한 다음, 그 결과를 가지고 조회"해야 할 때가 있습니다. 이럴 때 쿼리 안에 또 다른 쿼리를 중첩하는 것이 **서브쿼리**입니다.
+
+가장 흔한 형태는 단일 값을 돌려주는 서브쿼리입니다. 예컨대 "전체 평균보다 비싼 주문"을 찾으려면, 안쪽에서 먼저 전체 평균을 구하고 바깥에서 그것과 비교합니다.
+
 ```sql
--- (a) 스칼라 서브쿼리: 전체 평균보다 비싼 주문
 SELECT id, amount
 FROM orders
 WHERE amount > (SELECT AVG(amount) FROM orders);
-
--- (b) IN 서브쿼리: 'Seoul' 고객이 낸 주문만
-SELECT * FROM orders
-WHERE customer_id IN (SELECT id FROM customers WHERE city = 'Seoul');
-
--- (c) FROM 절 서브쿼리(파생 테이블): 고객별 합계 중 상위
-SELECT name, total FROM (
-    SELECT c.name, SUM(o.amount) AS total
-    FROM customers c JOIN orders o ON o.customer_id = c.id
-    GROUP BY c.id, c.name
-) AS t
-WHERE total >= 20000;
 ```
 
-### 4. CASE WHEN — 조건부 분류
+목록을 돌려주는 서브쿼리를 `IN`과 함께 쓰면, "특정 조건을 만족하는 대상들의 데이터"를 추릴 수 있습니다. 아래는 서울에 사는 고객들이 낸 주문만 골라냅니다.
+
+```sql
+SELECT * FROM orders
+WHERE customer_id IN (SELECT id FROM customers WHERE city = 'Seoul');
+```
+
+서브쿼리를 읽는 요령은 단순합니다. **안쪽 괄호를 먼저 계산해 그 결과로 치환한 뒤 바깥을 읽는다**고 생각하면, 아무리 중첩되어도 차근차근 풀립니다.
+
+### CASE — 조건에 따라 값을 정하기
+
+Python의 `if`처럼, SQL에서도 행마다 조건을 따져 다른 값을 부여하고 싶을 때가 있습니다. 금액에 따라 'high'/'mid'/'low' 등급을 매기는 식이지요. 이때 `CASE WHEN`을 씁니다.
+
 ```sql
 SELECT id, amount,
   CASE
@@ -78,44 +64,45 @@ SELECT id, amount,
   END AS grade
 FROM orders;
 ```
-집계와 함께 쓰면 "조건부 개수 세기"도 가능합니다.
+
+`CASE`의 조건은 **위에서부터 차례로** 평가되어 가장 먼저 맞는 것이 채택되므로, 큰 기준을 위에 두어야 합니다. `CASE`를 집계 함수와 결합하면 "조건부 개수 세기"라는 강력한 기법도 됩니다. 아래는 만 원 이상 주문이 몇 건인지를 한 번의 조회로 셉니다.
+
 ```sql
-SELECT
-  SUM(CASE WHEN amount >= 10000 THEN 1 ELSE 0 END) AS big_orders,
-  COUNT(*) AS total
+SELECT SUM(CASE WHEN amount >= 10000 THEN 1 ELSE 0 END) AS big_orders,
+       COUNT(*) AS total
 FROM orders;
 ```
 
-### 5. NULL 다루기
-- `NULL`은 "값 없음". `= NULL`이 아니라 `IS NULL` / `IS NOT NULL`로 비교
-- `COUNT(column)`은 NULL을 세지 않음 (`COUNT(*)`는 전체 행)
-- `COALESCE(value, 0)` : NULL이면 대체값 사용
+### NULL — "값이 없음"을 다루는 법
 
-### 6. 인덱스 (Index) 개념
-- 인덱스는 책의 **색인**과 같음. 특정 열로 빠르게 찾게 해줌
+NULL은 단순히 0이나 빈 문자열이 아니라 **"값이 아직/아예 없음"**을 뜻하는 특별한 상태입니다. 그래서 보통의 비교가 통하지 않습니다. `WHERE phone = NULL`은 아무것도 찾지 못하며, 반드시 `IS NULL` 또는 `IS NOT NULL`을 써야 합니다. 또 `COUNT(column)`은 NULL을 세지 않는 반면 `COUNT(*)`는 모든 행을 세고, NULL을 다른 값으로 바꿔 계산하고 싶으면 `COALESCE(값, 대체값)`을 씁니다. 현실의 데이터에는 빈 칸이 흔하므로, NULL을 의식하는 습관이 잘못된 통계를 막아 줍니다.
+
+### 인덱스 — 쿼리는 왜 빨라지는가
+
+데이터가 수백만 건으로 불어나면, 같은 쿼리라도 어떤 것은 순식간에, 어떤 것은 한참 걸려 돌아옵니다. 그 차이를 가르는 것이 **인덱스**입니다. 인덱스는 책 뒤의 **색인**과 똑같은 원리입니다. 색인이 없으면 특정 단어를 찾으려고 책을 처음부터 끝까지 넘겨야 하지만, 색인이 있으면 곧장 해당 쪽으로 갑니다. 데이터베이스도 자주 검색하는 열에 인덱스를 만들어 두면, 전체를 훑지 않고 빠르게 찾아냅니다.
+
 ```sql
 CREATE INDEX idx_orders_customer ON orders(customer_id);
 ```
-- 장점: `WHERE`, `JOIN`에서 조회 속도 ↑
-- 비용: 저장공간 ↑, INSERT/UPDATE 시 갱신 부담 ↑ → **자주 조회하는 열에 선별적으로**
-- `EXPLAIN QUERY PLAN <쿼리>` 로 인덱스 사용 여부를 확인 (모듈 후반/졸업생 트랙에서 심화)
+
+다만 인덱스는 공짜가 아닙니다. 저장 공간을 더 쓰고, 데이터를 넣거나 고칠 때마다 인덱스도 함께 갱신해야 해서 쓰기가 느려집니다. 그래서 **자주 조회하는 열에 선별적으로** 거는 것이 요령입니다. 어떤 쿼리가 인덱스를 실제로 쓰는지는 `EXPLAIN QUERY PLAN`으로 들여다볼 수 있는데, 이 "실행 계획을 읽고 쿼리를 다듬는" 일이 졸업생 트랙에서 본격적으로 다루는 쿼리 최적화의 출발점입니다.
+
+> 💡 여기서 더 나아가면 순위·누적합 등을 우아하게 처리하는 **윈도우 함수**가 기다리고 있습니다. 지금 당장은 몰라도 되지만, "GROUP BY로는 어려운데?" 싶은 순간이 오면 이 키워드를 떠올리세요.
 
 ---
 
-## 🛠 실습 / 산출물
-`exercises/`에서 분석형 SQL을 작성합니다.
-- HAVING으로 그룹 필터, 서브쿼리로 전체 평균 비교, CASE로 등급 분류, 고객별 합계 등
-- `queries.py`를 채우면 `check.py`가 실제 DB에 실행해 정답과 비교
-- 산출물: `check.py`를 통과하는 `queries.py`
+## 🛠 실습으로 익히기
+
+`exercises/`에서 같은 고객·주문 데이터베이스를 상대로, 이번엔 분석형 쿼리를 작성합니다. `HAVING`으로 그룹을 거르고, 서브쿼리로 전체 평균과 비교하고, `CASE`로 등급을 매기고, JOIN과 집계를 결합하는 다섯 개의 질문(Q1~Q5)이 준비되어 있습니다. `queries.py`를 채우면 `check.py`가 실제 데이터베이스에 실행해 채점합니다. 먼저 `examples/demo.py`로 각 기법의 결과를(인덱스 실행 계획까지) 눈으로 확인하고 시작하세요.
 
 ---
 
 ## ✅ 완료 기준 (체크리스트)
-- [ ] WHERE와 HAVING의 차이를 설명하고 둘 다 쓸 수 있다
-- [ ] 스칼라/IN/FROM 서브쿼리를 작성할 수 있다
-- [ ] CASE WHEN으로 조건부 분류를 할 수 있다
-- [ ] NULL을 IS NULL/COALESCE로 안전하게 다룬다
-- [ ] 인덱스가 무엇이고 왜/언제 쓰는지 설명할 수 있다
+- [ ] `WHERE`와 `HAVING`의 차이를 설명하고 둘 다 쓸 수 있다
+- [ ] 단일 값/목록을 돌려주는 서브쿼리를 작성할 수 있다
+- [ ] `CASE WHEN`으로 조건부 분류와 조건부 집계를 할 수 있다
+- [ ] NULL을 `IS NULL`/`COALESCE`로 안전하게 다룬다
+- [ ] 인덱스가 무엇이고 왜·언제 쓰는지, 그 비용은 무엇인지 설명할 수 있다
 - [ ] `exercises/`의 `queries.py`가 `check.py`를 통과한다
 - [ ] `assessment/quiz.md`를 모두 풀었다
 
@@ -128,4 +115,4 @@ CREATE INDEX idx_orders_customer ON orders(customer_id);
 ## 🔗 참고 자료
 - [SQLBolt — 12~18장 (집계/서브쿼리)](https://sqlbolt.com/)
 - [Use The Index, Luke! — 인덱스 입문](https://use-the-index-luke.com/)
-- 모듈 12(Docker로 Postgres 띄우기)로 이어집니다. (SQLite → 실무 DB)
+- 다음 모듈 12(Docker로 Postgres 띄우기)로 이어집니다. SQLite에서 실무 DB로 한 걸음 나아갑니다.
