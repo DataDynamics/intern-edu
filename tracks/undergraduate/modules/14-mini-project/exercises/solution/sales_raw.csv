@@ -1,0 +1,15 @@
+date,category,product,amount,payment
+2026-06-01,Book, 데이터중심설계 ,12000,card
+2026-06-01,food,김밥,3500,Cash
+2026-06-01,BOOK,클린코드,15000,card
+2026-06-02,Toy,레고,30000,CARD
+2026-06-02,food,라면,,cash
+2026-06-02,toy,퍼즐,8000,card
+2026-06-02,food,김밥,3500,Cash
+2026-06-03,book,리팩토링,22000,card
+2026-06-03,FOOD,커피,4500,cash
+2026-06-03,toy,블록,abc
+2026-06-03,book,리팩토링,22000,card
+2026-06-04,food,샌드위치,6000,CARD
+2026-06-04,Book,SQL입문,18000,card
+2026-06-04,toy ,인형,12000, cash
