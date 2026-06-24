@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# 환경/비밀
+.env
+*.local
+
+# 데이터 (대용량 원본은 커밋 금지 — 다운로드 스크립트로 대체)
+*.parquet
+*.db
+*.sqlite
+
+# OS / 에디터
+.DS_Store
+.idea/
+.vscode/
+
+# Docker 볼륨/로그
+*.log
+!**/examples/data/*.log
+!**/exercises/**/data/*.log
