@@ -13,6 +13,7 @@
 ---
 
 ## 🎯 학습 목표
+- **GitHub 계정을 만들고 이 교육 저장소를 내 컴퓨터로 받는다(clone)**
 - 터미널을 열고 기본 명령으로 이동·확인을 한다
 - VSCode를 설치하고 폴더를 열어 코드를 편집한다
 - `uv`(또는 venv)로 Python 가상환경을 만든다
@@ -23,10 +24,46 @@
 
 ## 📚 핵심 주제
 
+### 0. 가장 먼저 — GitHub 가입 & 이 저장소 받기 🚀
+이 교육의 모든 자료는 GitHub 저장소에 있습니다. 가장 먼저 **계정을 만들고 저장소를
+내 컴퓨터로 복제(clone)** 하세요. (Git 사용법 자체는 모듈 06에서 자세히 배웁니다. 여기서는
+"자료를 내 PC로 받는 것"이 목표입니다.)
+
+**① GitHub 계정 만들기**
+1. [github.com](https://github.com/) 접속 → **Sign up** 클릭
+2. 이메일 · 비밀번호 · 사용자명(username) 입력 → 이메일 인증
+3. 학생이라면 [GitHub 학생 혜택(Student Developer Pack)](https://education.github.com/pack)도 신청해두면 좋습니다.
+
+**② Git 설치 확인**
+```bash
+git --version        # 버전이 안 나오면 설치 필요
+```
+- macOS: `xcode-select --install` 또는 [git-scm.com](https://git-scm.com/)
+- Windows: [git-scm.com](https://git-scm.com/) 에서 Git for Windows 설치 (Git Bash 포함)
+- Linux: `sudo apt install git` (Ubuntu 기준)
+
+**③ 이 저장소 clone(복제)하기**
+저장소 페이지에서 초록색 **Code** 버튼 → HTTPS 주소를 복사한 뒤:
+```bash
+cd ~                 # 받을 위치로 이동 (예: 홈 디렉토리)
+git clone https://github.com/DataDynamics/intern-edu.git
+cd intern-edu        # 복제된 폴더로 이동
+ls                   # 트랙/모듈 파일이 보이면 성공!
+```
+> 💡 "clone"은 원격 저장소 전체를 내 컴퓨터로 **통째로 복사**해 오는 것입니다.
+> 이후 강사가 자료를 업데이트하면 `git pull` 한 줄로 최신 내용을 받을 수 있습니다 (모듈 06).
+
+**④ VSCode로 열기**
+```bash
+code .               # 현재 폴더(intern-edu)를 VSCode로 열기
+```
+
+> 회사 계정·조직 저장소·SSH 키 설정 등 세부 정책은 강사 안내를 따르세요.
+
 ### 1. 터미널/쉘이란
 - **터미널**: 명령어로 컴퓨터에 일을 시키는 창
 - **쉘(shell)**: 명령을 해석하는 프로그램 (bash, zsh)
-- 자주 쓰는 첫 명령 (자세한 건 모듈 04에서):
+- 자주 쓰는 첫 명령 (자세한 건 모듈 05에서):
 ```bash
 pwd        # 현재 위치
 ls         # 파일 목록
@@ -93,6 +130,8 @@ uv pip install -r requirements.txt    # 목록대로 설치
 ---
 
 ## ✅ 완료 기준 (체크리스트)
+- [ ] GitHub 계정을 만들었다
+- [ ] `git clone`으로 이 교육 저장소를 내 컴퓨터로 받았다
 - [ ] 터미널에서 `pwd`/`ls`/`cd`로 이동할 수 있다
 - [ ] VSCode로 폴더를 열어 파일을 편집할 수 있다
 - [ ] 가상환경을 만들고 활성화/비활성화할 수 있다
@@ -110,4 +149,4 @@ uv pip install -r requirements.txt    # 목록대로 설치
 ## 🔗 참고 자료
 - [uv 공식 문서](https://docs.astral.sh/uv/)
 - [VSCode로 Python 시작하기](https://code.visualstudio.com/docs/python/python-tutorial)
-- 모듈 04(Linux 기초)에서 터미널 명령을 본격적으로 다룹니다.
+- 모듈 05(Linux 기초)에서 터미널 명령을 본격적으로 다룹니다.
