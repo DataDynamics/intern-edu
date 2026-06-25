@@ -1,17 +1,31 @@
-"""예제 — 집계 심화 / HAVING / 서브쿼리 / CASE / 인덱스
-실행: python demo.py
-"""
-import sqlite3
+"""예제 — 집계 심화 / HAVING / 서브쿼리 / CASE / 인덱스 (PostgreSQL)
 
-conn = sqlite3.connect(":memory:")
-with open("schema.sql", "r", encoding="utf-8") as f:
-    conn.executescript(f.read())
+사전 준비:
+  1. PostgreSQL 실행 (설치는 setup/postgresql-setup.md 참고)
+  2. pip install psycopg2-binary
+
+실행: python demo.py
+
+접속 정보는 환경변수로 바꿀 수 있습니다.
+  - DATABASE_URL=postgresql://사용자:비밀번호@localhost:5432/DB이름
+  - 또는 PGHOST/PGPORT/PGUSER/PGPASSWORD/PGDATABASE
+  - 아무것도 없으면 libpq 기본값(현재 OS 사용자)으로 접속합니다.
+"""
+import os
+import psycopg2
+
+conn = psycopg2.connect(os.environ.get("DATABASE_URL", ""))
+conn.autocommit = True
+with conn.cursor() as cur, open("schema.sql", "r", encoding="utf-8") as f:
+    cur.execute(f.read())
 
 
 def run(title, sql):
     print(f"\n== {title} ==")
-    for row in conn.execute(sql):
-        print("  ", row)
+    with conn.cursor() as cur:
+        cur.execute(sql)
+        for row in cur.fetchall():
+            print("  ", row)
 
 
 run("전체 집계", "SELECT COUNT(*) cnt, SUM(amount) total, AVG(amount) avg FROM orders")
@@ -30,8 +44,10 @@ run("CASE: 금액 등급",
        FROM orders ORDER BY id LIMIT 5""")
 
 print("\n== 인덱스 생성 후 실행계획 ==")
-conn.execute("CREATE INDEX idx_orders_customer ON orders(customer_id)")
-for row in conn.execute("EXPLAIN QUERY PLAN SELECT * FROM orders WHERE customer_id = 1"):
-    print("  ", row)
+with conn.cursor() as cur:
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_orders_customer ON orders(customer_id)")
+    cur.execute("EXPLAIN SELECT * FROM orders WHERE customer_id = 1")
+    for row in cur.fetchall():
+        print("  ", row)
 
 conn.close()

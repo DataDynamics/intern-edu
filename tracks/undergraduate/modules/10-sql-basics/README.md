@@ -8,7 +8,9 @@
 
 세상의 데이터는 대부분 **데이터베이스** 안에 살고 있습니다. 그리고 그 데이터에게 질문을 던지고 원하는 답을 꺼내 오는 공용어가 바로 **SQL(Structured Query Language)**입니다. 데이터 엔지니어에게 SQL은 Python만큼이나, 어쩌면 그 이상으로 중요합니다. 파이프라인이 데이터를 옮기는 일의 양 끝에는 거의 언제나 SQL이 있기 때문입니다.
 
-SQL의 매력은, 한국어 문장과 놀랄 만큼 닮았다는 점입니다. "orders에서 amount가 만 원 넘는 것을 금액 큰 순으로 보여 줘"라는 말이 거의 그대로 코드가 됩니다. 이 모듈에서는 설치가 필요 없는 가벼운 데이터베이스인 **SQLite**로 SELECT부터 JOIN까지 손에 익힙니다. SQLite는 Python에 기본으로 들어 있어(`import sqlite3`) 따로 깔 것이 없고, 여기서 배우는 문법은 실무에서 쓰는 PostgreSQL 같은 데이터베이스에서도 거의 그대로 통합니다(실무 DB는 모듈 12에서 만납니다).
+SQL의 매력은, 한국어 문장과 놀랄 만큼 닮았다는 점입니다. "orders에서 amount가 만 원 넘는 것을 금액 큰 순으로 보여 줘"라는 말이 거의 그대로 코드가 됩니다. 이 모듈에서는 처음부터 실무에서 가장 널리 쓰이는 데이터베이스인 **PostgreSQL**로 SELECT부터 JOIN까지 손에 익힙니다. 가벼운 학습용 DB가 아니라 현업에서 쓰는 바로 그 데이터베이스로 시작하므로, 여기서 익힌 감각이 그대로 실무로 이어집니다.
+
+> ⚙️ **시작 전 준비**: 로컬에 PostgreSQL을 설치하고 Python 드라이버를 준비해야 합니다. [PostgreSQL 설치 & 접속 세팅](../../../../setup/postgresql-setup.md)을 먼저 따라 하세요(운영체제별 설치 + `pip install psycopg2-binary`). 같은 PostgreSQL을 모듈 12에서는 Docker 컨테이너로 띄워 봅니다.
 
 ---
 
@@ -114,7 +116,7 @@ ORDER BY total DESC;
 
 ## 🛠 실습으로 익히기
 
-`exercises/`에서 고객·주문이 담긴 SQLite 데이터베이스를 상대로, 질문에 답하는 SQL 쿼리를 직접 작성합니다. 조건으로 주문을 추리고, 금액순으로 정렬하고, 고객과 주문을 JOIN하고, 카테고리별로 집계하는 여섯 개의 질문(Q1~Q6)이 준비되어 있습니다. 각 쿼리를 `queries.py`에 채워 넣으면 `check.py`가 실제 데이터베이스에 그 쿼리를 실행해 정답과 대조해 줍니다. 먼저 `examples/demo.py`를 실행해 각 문법이 어떤 결과를 내는지 눈으로 확인하고 시작하면 좋습니다.
+`exercises/`에서 고객·주문이 담긴 PostgreSQL 데이터베이스를 상대로, 질문에 답하는 SQL 쿼리를 직접 작성합니다. 조건으로 주문을 추리고, 금액순으로 정렬하고, 고객과 주문을 JOIN하고, 카테고리별로 집계하는 여섯 개의 질문(Q1~Q6)이 준비되어 있습니다. 각 쿼리를 `queries.py`에 채워 넣으면 `check.py`가 실제 데이터베이스에 그 쿼리를 실행해 정답과 대조해 줍니다. 먼저 `examples/demo.py`를 실행해 각 문법이 어떤 결과를 내는지 눈으로 확인하고 시작하면 좋습니다.
 
 ---
 
@@ -129,13 +131,14 @@ ORDER BY total DESC;
 - [ ] `assessment/quiz.md`를 모두 풀었다
 
 ## 📂 폴더 구성
-- `examples/` — SQLite를 세팅하고 쿼리를 실행하는 예제 (`schema.sql`, `demo.py`)
+- `examples/` — PostgreSQL에 스키마를 적재하고 쿼리를 실행하는 예제 (`schema.sql`, `demo.py`)
 - `exercises/starter/` — 채워야 할 쿼리 골격 + 자가 검증
 - `exercises/solution/` — 정답 쿼리
 - `assessment/` — 퀴즈 + 완료 체크리스트
 
 ## 🔗 참고 자료
 - [SQLBolt — 인터랙티브 SQL 연습](https://sqlbolt.com/)
-- [SQLite 공식 문서](https://www.sqlite.org/lang.html)
+- [PostgreSQL 공식 문서 — SQL 명령](https://www.postgresql.org/docs/current/sql-commands.html)
+- [PostgreSQL 설치 & 접속 세팅](../../../../setup/postgresql-setup.md)
 - [Mode SQL 튜토리얼](https://mode.com/sql-tutorial/)
 - 다음 모듈 11(SQL 활용 — 집계 심화·서브쿼리)로 이어집니다.

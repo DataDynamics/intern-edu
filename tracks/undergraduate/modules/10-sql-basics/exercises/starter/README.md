@@ -17,8 +17,13 @@ orders(id, customer_id, category, amount)
 - **Q5**: 각 주문의 `주문id`, `고객이름`, `amount`를 JOIN으로 조회 (id 오름차순)
 - **Q6**: 카테고리별 매출 합계를 `category`, `total`(별칭)로, 합계 내림차순 조회
 
+## 사전 준비
+- PostgreSQL이 실행 중이어야 합니다 → [설치 & 접속 세팅](../../../../../../setup/postgresql-setup.md)
+- Python 드라이버 설치: `pip install psycopg2-binary`
+- 접속 정보는 환경변수로 바꿀 수 있습니다(`DATABASE_URL` 또는 `PG*`). 기본값은 현재 OS 사용자로 접속합니다.
+
 ## 검증
 ```bash
 python check.py
 ```
-`✅ 모든 테스트 통과!` 가 목표입니다.
+`✅ 모든 테스트 통과!` 가 목표입니다. (`check.py`가 `schema.sql`을 DB에 적재한 뒤 쿼리를 실행합니다.)

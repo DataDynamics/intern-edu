@@ -1,4 +1,4 @@
--- 고객 / 주문 스키마 (SQLite)
+-- 고객 / 주문 스키마 (PostgreSQL)
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS customers;
 

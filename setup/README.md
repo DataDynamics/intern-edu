@@ -5,8 +5,9 @@
 ## 준비 항목
 1. **Python** — [python-setup.md](python-setup.md) (uv / venv)
 2. **Git & GitHub** — [git-setup.md](git-setup.md)
-3. **Docker** — [docker/](docker/) (Postgres 등 실습용 컨테이너)
-4. **에디터** — VSCode 권장 (확장: Python, Docker)
+3. **PostgreSQL** — [postgresql-setup.md](postgresql-setup.md) (SQL 모듈 10·11 실습용, OS별 설치)
+4. **Docker** — [docker/](docker/) (Postgres 등 실습용 컨테이너)
+5. **에디터** — VSCode 권장 (확장: Python, Docker)
 
 ## 운영체제
 - macOS / Linux / Windows(WSL2 권장) 지원
@@ -18,6 +19,7 @@
 ```bash
 python --version
 git --version
+psql --version
 docker --version
 ```
 
