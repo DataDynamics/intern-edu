@@ -1,0 +1,13 @@
+id,name,category,price
+1,파이썬 입문서,book,18000
+2,데이터 분석 교재,book,27000
+3,SQL 레시피,book,23000
+4,초콜릿 선물세트,food,15000
+5,유기농 원두 1kg,food,29000
+6,수제 쿠키 박스,food,9000
+7,블록 장난감,toy,34000
+8,보드게임 클래식,toy,42000
+9,무선 이어폰,electronics,89000
+10,기계식 키보드,electronics,76000
+11,USB-C 허브,electronics,32000
+12,코튼 후드티,clothing,39000
