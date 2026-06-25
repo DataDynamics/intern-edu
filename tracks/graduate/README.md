@@ -33,3 +33,4 @@
 
 > 환경 세팅은 [../../setup/README.md](../../setup/README.md)를 먼저 확인하세요.
 > 전체 그림은 [커리큘럼 개요](../../docs/curriculum-overview.md)에 있습니다.
+> 낯선 용어가 나오면 [용어집](../glossary.md)에서 찾아보세요.
