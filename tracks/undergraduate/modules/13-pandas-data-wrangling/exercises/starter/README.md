@@ -1,7 +1,7 @@
 # 실습 — pandas로 주문 데이터 분석
 
 주문/고객 CSV를 pandas로 정제·집계·병합하는 함수를 완성합니다.
-(09~10에서 SQL로 풀던 문제를 이번엔 pandas로!)
+(09\~10에서 SQL로 풀던 문제를 이번엔 pandas로!)
 
 ## 데이터
 - `orders.csv` : id, customer_id, category, amount (amount에 빈 값=결측 1건 존재)

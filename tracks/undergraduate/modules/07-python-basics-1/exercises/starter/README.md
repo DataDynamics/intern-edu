@@ -6,9 +6,9 @@
 ## 할 일
 `status_stats.py`의 두 함수에서 `# TODO`를 채웁니다.
 1. `classify(status)` — 상태코드 하나를 받아 카테고리 문자열을 반환
-   - 200~299 → `"success"`
-   - 400~499 → `"client_error"`
-   - 500~599 → `"server_error"`
+   - 200\~299 → `"success"`
+   - 400\~499 → `"client_error"`
+   - 500\~599 → `"server_error"`
    - 그 외 → `"other"`
 2. `summarize(statuses)` — 상태코드 리스트를 받아
    `{"success": n, "client_error": n, "server_error": n, "other": n}` 형태로 개수 반환

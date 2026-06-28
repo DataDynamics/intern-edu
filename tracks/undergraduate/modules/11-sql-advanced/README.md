@@ -125,6 +125,6 @@ CREATE INDEX idx_orders_customer ON orders(customer_id);
 - `assessment/` — 퀴즈 + 완료 체크리스트
 
 ## 🔗 참고 자료
-- [SQLBolt — 12~18장 (집계/서브쿼리)](https://sqlbolt.com/)
+- [SQLBolt — 12\~18장 (집계/서브쿼리)](https://sqlbolt.com/)
 - [Use The Index, Luke! — 인덱스 입문](https://use-the-index-luke.com/)
 - 다음 모듈 12(Docker로 Postgres 띄우기)로 이어집니다. 로컬에 설치한 PostgreSQL을 이번엔 컨테이너로 띄워 봅니다.
